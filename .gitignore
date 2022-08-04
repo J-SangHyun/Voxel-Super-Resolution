@@ -133,3 +133,7 @@ dmypy.json
 
 # vscode
 .vscode/
+
+# ModelNet dataset
+dataset/ModelNet10/*/*/*.off
+dataset/ModelNet40/*/*/*.off
