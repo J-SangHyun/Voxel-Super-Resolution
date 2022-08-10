@@ -137,3 +137,6 @@ dmypy.json
 # ModelNet dataset
 dataset/ModelNet10/*/*/*.off
 dataset/ModelNet40/*/*/*.off
+
+# binvox executable
+utils/binvox.exe
