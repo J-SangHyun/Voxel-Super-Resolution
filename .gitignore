@@ -140,3 +140,6 @@ dataset/ModelNet40/*/*/*.off
 
 # binvox executable
 utils/binvox.exe
+
+# binvox files
+voxelized/**/*.binvox
