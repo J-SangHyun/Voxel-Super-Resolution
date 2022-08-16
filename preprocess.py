@@ -82,6 +82,6 @@ def preprocess(dataset_name, grid):
 
 
 if __name__ == '__main__':
-    grid_sizes = [32, 64, 128, 256]
+    grid_sizes = [16, 32, 64, 128, 256]
     for grid in grid_sizes:
         preprocess('ModelNet10', grid)

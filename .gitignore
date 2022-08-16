@@ -143,3 +143,6 @@ utils/binvox.exe
 
 # binvox files
 voxelized/**/*.binvox
+
+# ckpt files
+ckpt/

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import torch
 from pathlib import Path
 import scipy.ndimage as nd
@@ -16,28 +17,29 @@ class ModelNetDataset(Dataset):
         self.upsampling = upsampling
 
         assert dataset in ['ModelNet10', 'ModelNet40']
-        assert mode in ['train', 'val', 'test']
-        assert hr > lr and hr % lr == 0
+        assert mode in ['train', 'valid', 'test']
+        assert hr >= lr and hr % lr == 0
 
         self.lr_files, self.hr_files = [], []
-        lr_classes = Path(f'voxelized/{lr}/{dataset}/').glob('*')
-        hr_classes = Path(f'voxelized/{hr}/{dataset}/').glob('*')
+        project_path = Path(os.path.dirname(__file__))
+        lr_classes = (project_path / f'voxelized/{lr}/{dataset}/').glob('*')
+        hr_classes = (project_path / f'voxelized/{hr}/{dataset}/').glob('*')
         for lr_class in lr_classes:
-            if mode in ['train', 'val']:
+            if mode in ['train', 'valid']:
                 train_files = list((lr_class / 'train').glob('*.binvox'))
                 if mode == 'train':
                     self.lr_files += train_files[:-len(train_files)//10]
-                elif mode == 'val':
+                elif mode == 'valid':
                     self.lr_files += train_files[-len(train_files)//10:]
             elif mode == 'test':
                 self.lr_files += list((lr_class / 'test').glob('*.binvox'))
 
         for hr_class in hr_classes:
-            if mode in ['train', 'val']:
+            if mode in ['train', 'valid']:
                 train_files = list((hr_class / 'train').glob('*.binvox'))
                 if mode == 'train':
                     self.hr_files += train_files[:-len(train_files)//10]
-                elif mode == 'val':
+                elif mode == 'valid':
                     self.hr_files += train_files[-len(train_files)//10:]
             elif mode == 'test':
                 self.hr_files += list((hr_class / 'test').glob('*.binvox'))
@@ -49,7 +51,7 @@ class ModelNetDataset(Dataset):
         if self.upsampling:
             lr = nd.zoom(lr, (self.rate, self.rate, self.rate), mode='constant', order=0)
         hr = binvox2numpy(self.hr_files[idx])
-        return torch.Tensor(lr), torch.Tensor(hr)
+        return torch.Tensor(lr).unsqueeze(0), torch.Tensor(hr).unsqueeze(0)
 
     def __len__(self):
         return len(self.lr_files)

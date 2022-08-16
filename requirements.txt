@@ -3,3 +3,4 @@ numpy~=1.23.0
 tqdm~=4.64.0
 scipy~=1.9.0
 torch~=1.21.1
+tensorboard~=2.10.0
