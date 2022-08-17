@@ -142,7 +142,7 @@ dataset/ModelNet40/*/*/*.off
 utils/binvox.exe
 
 # binvox files
-voxelized/**/*.binvox
+*.binvox
 
 # ckpt files
 ckpt/
