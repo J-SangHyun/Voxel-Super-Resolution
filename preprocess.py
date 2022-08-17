@@ -2,12 +2,8 @@
 import os
 import platform
 import subprocess
-import numpy as np
-import open3d as o3d
 from tqdm import tqdm
 from pathlib import Path
-from scipy import ndimage
-from utils.voxel_functions import voxel2obj
 
 
 def preprocess(dataset_name, grid):
