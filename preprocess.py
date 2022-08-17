@@ -12,14 +12,17 @@ def preprocess(dataset_name, grid):
     train_dir = {
         'ModelNet10': 'ModelNet10/*/train',
         'ModelNet40': 'ModelNet40/*/train',
+        'examples': 'InvalidPath'
     }
     test_dir = {
         'ModelNet10': 'ModelNet10/*/test',
         'ModelNet40': 'ModelNet40/*/test',
+        'examples': 'examples'
     }
     extension = {
         'ModelNet10': 'off',
         'ModelNet40': 'off',
+        'examples': 'obj'
     }
     assert 512 >= grid
 
@@ -78,6 +81,12 @@ def preprocess(dataset_name, grid):
 
 
 if __name__ == '__main__':
+    dataset_names = ['ModelNet10', 'ModelNet40', 'examples']
+    print('------- Dataset to Voxelize --------')
+    for i in range(len(dataset_names)):
+        print(f'{i}. {dataset_names[i]}')
+    dataset_name = dataset_names[int(input('Choose Dataset: '))]
+
     grid_sizes = [16, 32, 64, 128, 256]
     for grid in grid_sizes:
-        preprocess('ModelNet10', grid)
+        preprocess(dataset_name, grid)

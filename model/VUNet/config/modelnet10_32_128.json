@@ -3,6 +3,6 @@
   "low_grid": 32,
   "high_grid": 128,
   "max_epoch": 50,
-  "batch_size": 2,
-  "lr": 1e-4
+  "batch_size": 1,
+  "lr": 1e-3
 }

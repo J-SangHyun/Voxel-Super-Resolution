@@ -72,4 +72,4 @@ with torch.no_grad():
             voxel2obj(sr_path, (sr.to('cpu')[0].squeeze(0).detach() > 0.5).float().numpy())
         idx += 1
 
-print(f'Sum of MSE: {mse}')
+print(f'Mean of MSE: {mse / idx}')

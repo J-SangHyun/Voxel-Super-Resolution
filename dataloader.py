@@ -55,3 +55,28 @@ class ModelNetDataset(Dataset):
 
     def __len__(self):
         return len(self.lr_files)
+
+
+class ExampleDataset(Dataset):
+    def __init__(self, lr, hr, upsampling=False):
+        super(ExampleDataset, self).__init__()
+        self.lr, self.hr = lr, hr
+        self.rate = hr // lr
+        self.upsampling = upsampling
+
+        assert hr >= lr and hr % lr == 0
+
+        project_path = Path(os.path.dirname(__file__))
+        self.lr_files = list((project_path / f'voxelized/{lr}/examples').glob('*.binvox'))
+        self.hr_files = list((project_path / f'voxelized/{hr}/examples').glob('*.binvox'))
+        assert len(self.lr_files) == len(self.hr_files)
+
+    def __getitem__(self, idx):
+        lr = binvox2numpy(self.lr_files[idx])
+        if self.upsampling:
+            lr = nd.zoom(lr, (self.rate, self.rate, self.rate), mode='constant', order=0)
+        hr = binvox2numpy(self.hr_files[idx])
+        return torch.Tensor(lr).unsqueeze(0), torch.Tensor(hr).unsqueeze(0)
+
+    def __len__(self):
+        return len(self.lr_files)

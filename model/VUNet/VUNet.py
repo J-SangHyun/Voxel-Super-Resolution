@@ -85,23 +85,3 @@ class UpSamplingLayer(nn.Module):
         x = torch.cat([skip_x, down_x], dim=1)
         x = self.double_conv(x)
         return x
-
-
-if __name__ == '__main__':
-    from dataloader import ModelNetDataset
-    from torch.utils.data import DataLoader
-    from utils.voxel_functions import voxel2obj
-    dset = ModelNetDataset('ModelNet10', 'test', 16, 128, upsampling=True)
-    print(len(dset))
-    train_loader = DataLoader(dset, shuffle=True, batch_size=1)
-    model = VUNet(16, 128).to('cuda')
-    for lr, hr in train_loader:
-        lr = lr.to('cuda')
-        hr = hr.to('cuda')
-        sr = model(lr)
-        print(f'lr: {lr.size()} hr: {hr.size()} sr: {sr.size()}')
-        voxel2obj('lr.obj', lr.to('cpu')[0].squeeze(0).detach().numpy())
-        voxel2obj('hr.obj', hr.to('cpu')[0].squeeze(0).detach().numpy())
-        voxel2obj('sr.obj', (sr.to('cpu')[0].squeeze(0).detach() > 0.5).float().numpy())
-        break
-
