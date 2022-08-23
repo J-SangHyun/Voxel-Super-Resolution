@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 from dataloader import ModelNetDataset
-from model.VUNet.VUNet import VUNet
+from models.VUNet.VUNet import VUNet
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Torch device: {device}')

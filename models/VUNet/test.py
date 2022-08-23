@@ -8,8 +8,8 @@ from torch.utils.data import DataLoader
 from pathlib import Path
 from utils.voxel_functions import voxel2obj
 
-from dataloader import ExampleDataset
-from model.VUNet.VUNet import VUNet
+from dataloader import ModelNetDataset
+from models.VUNet.VUNet import VUNet
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Torch device: {device}')
@@ -28,11 +28,11 @@ batch_size = config['batch_size']
 low_grid, high_grid = config['low_grid'], config['high_grid']
 
 model = VUNet(low_grid, high_grid).to(device)
-test_dataset = ExampleDataset(low_grid, high_grid, upsampling=model.need_upsampling)
+test_dataset = ModelNetDataset(config['dataset'], 'test', low_grid, high_grid, upsampling=model.need_upsampling)
 test_loader = DataLoader(test_dataset, shuffle=False, batch_size=1)
 
 root = Path(os.path.dirname(__file__))
-object_dir = root / 'object_examples' / config['dataset'] / f'{low_grid}_{high_grid}'
+object_dir = root / 'objects' / config['dataset'] / f'{low_grid}_{high_grid}'
 object_dir.mkdir(parents=True, exist_ok=True)
 
 ckpt_root = model.path / 'ckpt' / config['dataset'] / f'{low_grid}_{high_grid}'
@@ -61,13 +61,15 @@ with torch.no_grad():
         sr = model(lr)
 
         mse += F.mse_loss(hr, sr)
-        lr_path = object_dir / f'lr{idx}.obj'
-        hr_path = object_dir / f'hr{idx}.obj'
-        sr_path = object_dir / f'sr{idx}.obj'
 
-        voxel2obj(lr_path, lr.to('cpu')[0].squeeze(0).detach().numpy())
-        voxel2obj(hr_path, hr.to('cpu')[0].squeeze(0).detach().numpy())
-        voxel2obj(sr_path, (sr.to('cpu')[0].squeeze(0).detach() > 0.5).float().numpy())
+        if idx % 100 == 0:
+            lr_path = object_dir / f'lr{idx // 100}.obj'
+            hr_path = object_dir / f'hr{idx // 100}.obj'
+            sr_path = object_dir / f'sr{idx // 100}.obj'
+
+            voxel2obj(lr_path, lr.to('cpu')[0].squeeze(0).detach().numpy())
+            voxel2obj(hr_path, hr.to('cpu')[0].squeeze(0).detach().numpy())
+            voxel2obj(sr_path, (sr.to('cpu')[0].squeeze(0).detach() > 0.5).float().numpy())
         idx += 1
 
 print(f'Mean of MSE: {mse / idx}')
