@@ -2,7 +2,7 @@
   "dataset": "ModelNet10",
   "low_grid": 16,
   "high_grid": 64,
-  "max_epoch": 50,
+  "max_epoch": 20,
   "batch_size": 4,
-  "lr": 1e-3
+  "lr": 5e-2
 }
