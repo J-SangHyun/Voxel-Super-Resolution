@@ -10,7 +10,8 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 from dataloader import ModelNetDataset
-from models.VUNet.VUNet import VUNet
+from models.VUNet_ProjectionLoss.VUNet import VUNet
+from models.VUNet_ProjectionLoss.loss import projection_loss
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Torch device: {device}')
@@ -35,7 +36,10 @@ valid_dataset = ModelNetDataset(config['dataset'], 'valid', low_grid, high_grid,
 train_loader = DataLoader(train_dataset, shuffle=True, batch_size=batch_size)
 valid_loader = DataLoader(valid_dataset, shuffle=False, batch_size=1)
 
-ckpt_root = model.path / 'ckpt' / config['dataset'] / f'{low_grid}_{high_grid}'
+alpha = config['alpha']
+beta = 1 - alpha
+
+ckpt_root = model.path / 'ckpt' / config['dataset'] / f'{low_grid}_{high_grid}_{alpha}'
 ckpt_root.mkdir(parents=True, exist_ok=True)
 last_path = ckpt_root / 'last.pth'
 best_path = ckpt_root / 'best.pth'
@@ -72,7 +76,7 @@ for epoch in range(last_epoch+1, max_epoch+1):
         hr = hr.to(device)
         sr = model(lr)
 
-        loss = F.mse_loss(hr, sr)
+        loss = alpha * F.mse_loss(hr, sr) + beta * projection_loss(hr, sr)
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -88,7 +92,7 @@ for epoch in range(last_epoch+1, max_epoch+1):
             hr = hr.to(device)
             sr = model(lr)
 
-            loss = F.mse_loss(hr, sr)
+            loss = alpha * F.mse_loss(hr, sr) + beta * projection_loss(hr, sr)
 
             valid_loss += loss.item()
             valid_iter += 1
