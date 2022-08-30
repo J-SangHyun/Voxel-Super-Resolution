@@ -44,7 +44,7 @@ class VUNet(nn.Module):
         x = self.up1(x3, x)
         x = self.up2(x2, x)
         x = self.up3(x1, x)
-        x = self.output_conv(x)
+        x = torch.sigmoid(self.output_conv(x))
         return x
 
 
