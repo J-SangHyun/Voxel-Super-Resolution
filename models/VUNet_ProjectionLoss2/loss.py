@@ -14,16 +14,16 @@ def projection_loss(input, target):
     target_light_from_W = torch.ones(B, C, D, H, device=device)
 
     for d in range(D):
-        input_light_from_D = input_light_from_D * input[:, :, d, :, :]
-        target_light_from_D = target_light_from_D * target[:, :, d, :, :]
+        input_light_from_D = input_light_from_D * (1 - input[:, :, d, :, :])
+        target_light_from_D = target_light_from_D * (1 - target[:, :, d, :, :])
 
     for h in range(H):
-        input_light_from_H = input_light_from_H * input[:, :, :, h, :]
-        target_light_from_H = target_light_from_H * target[:, :, :, h, :]
+        input_light_from_H = input_light_from_H * (1 - input[:, :, :, h, :])
+        target_light_from_H = target_light_from_H * (1 - target[:, :, :, h, :])
 
     for w in range(W):
-        input_light_from_W = input_light_from_W * input[:, :, :, :, w]
-        target_light_from_W = target_light_from_W * target[:, :, :, :, w]
+        input_light_from_W = input_light_from_W * (1 - input[:, :, :, :, w])
+        target_light_from_W = target_light_from_W * (1 - target[:, :, :, :, w])
 
     loss = (F.mse_loss(input_light_from_D, target_light_from_D) +
             F.mse_loss(input_light_from_H, target_light_from_H) +
