@@ -47,7 +47,7 @@ last_epoch = 0
 
 if os.path.exists(best_path):
     ckpt = torch.load(best_path)
-    best_val_loss = ckpt['valid_loss']
+    best_valid_loss = ckpt['valid_loss']
 
 if os.path.exists(last_path):
     ckpt = torch.load(last_path, map_location=torch.device(device))
