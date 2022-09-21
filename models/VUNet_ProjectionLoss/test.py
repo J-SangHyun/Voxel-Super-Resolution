@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from pathlib import Path
 from utils.voxel_functions import voxel2obj
+from torchmetrics.functional import peak_signal_noise_ratio
 
 from dataloader import ModelNetDataset
 from models.VUNet_ProjectionLoss.VUNet import VUNet
@@ -56,14 +57,15 @@ else:
 
 model.eval()
 idx = 0
-mse = 0.0
+total_psnr = 0.0
+
 with torch.no_grad():
     for lr, hr in test_loader:
         lr = lr.to(device)
         hr = hr.to(device)
         sr = model(lr)
 
-        mse += F.mse_loss(hr, sr)
+        total_psnr += peak_signal_noise_ratio(sr, hr)
 
         if idx % 100 == 0:
             lr_path = object_dir / f'lr{idx // 100}.obj'
@@ -75,4 +77,4 @@ with torch.no_grad():
             voxel2obj(sr_path, (sr.to('cpu')[0].squeeze(0).detach() > 0.5).float().numpy())
         idx += 1
 
-print(f'Mean of MSE: {mse / idx}')
+print(f'AVERAGE PSNR: {total_psnr / idx}')
