@@ -36,7 +36,7 @@ alpha = config['alpha']
 beta = 1 - alpha
 
 root = Path(os.path.dirname(__file__))
-object_dir = root / 'object_examples' / config['dataset'] / f'{low_grid}_{high_grid}_{alpha}'
+object_dir = root / 'objects' / config['dataset'] / f'{low_grid}_{high_grid}_{alpha}'
 object_dir.mkdir(parents=True, exist_ok=True)
 
 ckpt_root = model.path / 'ckpt' / config['dataset'] / f'{low_grid}_{high_grid}_{alpha}'
