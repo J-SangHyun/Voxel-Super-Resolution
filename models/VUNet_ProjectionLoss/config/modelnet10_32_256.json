@@ -1,8 +1,0 @@
-{
-  "dataset": "ModelNet10",
-  "low_grid": 32,
-  "high_grid": 256,
-  "max_epoch": 20,
-  "batch_size": 1,
-  "lr": 5e-2
-}

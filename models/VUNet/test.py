@@ -10,7 +10,7 @@ from utils.voxel_functions import voxel2obj
 from torchmetrics.functional import peak_signal_noise_ratio
 
 from dataloader import ModelNetDataset
-from models.VUNet.VUNet import VUNet
+from models.VUNet_ProjectionLoss2.VUNet import VUNet
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Torch device: {device}')
@@ -32,11 +32,14 @@ model = VUNet(low_grid, high_grid).to(device)
 test_dataset = ModelNetDataset(config['dataset'], 'test', low_grid, high_grid, upsampling=model.need_upsampling)
 test_loader = DataLoader(test_dataset, shuffle=False, batch_size=1)
 
+alpha = config['alpha']
+beta = 1 - alpha
+
 root = Path(os.path.dirname(__file__))
-object_dir = root / 'objects' / config['dataset'] / f'{low_grid}_{high_grid}'
+object_dir = root / 'objects' / config['dataset'] / f'{low_grid}_{high_grid}_{alpha}'
 object_dir.mkdir(parents=True, exist_ok=True)
 
-ckpt_root = model.path / 'ckpt' / config['dataset'] / f'{low_grid}_{high_grid}'
+ckpt_root = model.path / 'ckpt' / config['dataset'] / f'{low_grid}_{high_grid}_{alpha}'
 best_path = ckpt_root / 'best.pth'
 best_valid_loss = np.inf
 last_epoch = 0
