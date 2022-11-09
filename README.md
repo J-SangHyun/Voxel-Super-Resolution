@@ -41,3 +41,7 @@ pip install -r requirements.txt
 10. If you want to test the model, run ```models/VUNet/test.py``` or ```models/VUNet/test_on_examples.py```.
 
 11. Result mesh files will be created in ```models/VUNet/objects/...``` and ```models/VUNet/object_examples```.
+
+-------------
+## Result
+![Initial state](figures/result.png)
