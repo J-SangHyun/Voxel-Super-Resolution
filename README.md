@@ -44,4 +44,4 @@ pip install -r requirements.txt
 
 -------------
 ## Result
-![Initial state](figures/result.png)
+![result image](figures/result.png)
