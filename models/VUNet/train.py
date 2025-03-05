@@ -10,8 +10,8 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
 from dataloader import ModelNetDataset
-from models.VUNet_ProjectionLoss2.VUNet import VUNet
-from models.VUNet_ProjectionLoss2.loss import projection_loss
+from models.VUNet.VUNet import VUNet
+from models.VUNet.loss import projection_loss
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Torch device: {device}')

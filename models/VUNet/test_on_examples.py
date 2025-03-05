@@ -9,7 +9,7 @@ from pathlib import Path
 from utils.voxel_functions import voxel2obj
 
 from dataloader import ExampleDataset
-from models.VUNet_ProjectionLoss2.VUNet import VUNet
+from models.VUNet.VUNet import VUNet
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'Torch device: {device}')
